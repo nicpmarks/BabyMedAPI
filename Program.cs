@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Collections.Generic;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 
 using BabyMedsAPI.Services;
 using BabyMedsAPI.Controllers;
@@ -17,9 +18,16 @@ namespace BabyMedsAPI
         static void Main(string[] args)
         {
 			var builder = WebApplication.CreateBuilder(args);
+			
+			var dbSettings = new CosmosDBSettings();
+			builder.Configuration.GetSection("CosmosDB").Bind(dbSettings);
 
-			builder.Services.Configure<CosmosDBSettings>(builder.Configuration.GetSection("CosmosDB"));
-			builder.Services.AddSingleton<CosmosDBService>();
+			builder.Services.AddDbContext<CosmosDbContext>(options => options.UseCosmos(
+				dbSettings.APIURI,
+				dbSettings.APIKEY,
+				dbSettings.DBName
+			));
+
 			builder.Services.AddControllers();
 
 

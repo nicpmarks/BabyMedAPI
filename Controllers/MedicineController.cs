@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BabyMedsAPI.Models;
 using BabyMedsAPI.Services;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace BabyMedsAPI.Controllers
 {
@@ -9,11 +10,27 @@ namespace BabyMedsAPI.Controllers
 	[ApiController]
 	public class MedicineController : ControllerBase
 	{
-		private readonly CosmosDBService _cosmosDbService;
+		[HttpGet]
+   		public async Task<string> GetAll() 
+		{
+			string str = "";
+  			foreach (Medicine med in _context.Medicines) 
+			{
+				string jsonString = JsonSerializer.Serialize(med);
+				str += jsonString;
+			}
 
-    	public MedicineController(CosmosDBService cosmosDbService) =>
-        	_cosmosDbService = cosmosDbService;
+			return str;
+		}
 
+
+
+		private readonly CosmosDbContext _context;
+
+    	public MedicineController(CosmosDbContext cosmosDbContext) =>
+        	_context = cosmosDbContext;
+			
+		/*
 		[HttpGet]
    		public async Task<string> GetAll() 
 		{
@@ -73,6 +90,7 @@ namespace BabyMedsAPI.Controllers
 
 			return NoContent();
 		}
+		*/
 	}
 
 }
