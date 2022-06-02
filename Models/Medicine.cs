@@ -1,11 +1,15 @@
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace BabyMedsAPI.Models
 {
 	public class Medicine
     {
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+		[Key]
+    	[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public string Name { get; set; }
 		
         public override string ToString()

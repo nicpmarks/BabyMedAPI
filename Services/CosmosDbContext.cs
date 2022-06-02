@@ -7,6 +7,7 @@ namespace BabyMedsAPI.Services
 	{
 		public CosmosDbContext(DbContextOptions<CosmosDbContext> options) : base(options)
         {
+			Database.EnsureCreated();
         }
 
 		public DbSet<Medicine> Medicines { get; set; }

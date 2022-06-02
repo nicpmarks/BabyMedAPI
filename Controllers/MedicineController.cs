@@ -10,6 +10,13 @@ namespace BabyMedsAPI.Controllers
 	[ApiController]
 	public class MedicineController : ControllerBase
 	{
+		
+		private readonly CosmosDbContext _context;
+
+    	public MedicineController(CosmosDbContext cosmosDbContext) =>
+        	_context = cosmosDbContext;
+			
+
 		[HttpGet]
    		public async Task<string> GetAll() 
 		{
@@ -23,13 +30,18 @@ namespace BabyMedsAPI.Controllers
 			return str;
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> Post(Medicine med)
+		{
+			await _context.Medicines.AddAsync(med);
+			await _context.SaveChangesAsync();
+
+			return CreatedAtAction(nameof(Post), new { id = med.Id }, med);
+		}
 
 
-		private readonly CosmosDbContext _context;
 
-    	public MedicineController(CosmosDbContext cosmosDbContext) =>
-        	_context = cosmosDbContext;
-			
+
 		/*
 		[HttpGet]
    		public async Task<string> GetAll() 
